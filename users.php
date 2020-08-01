@@ -18,7 +18,7 @@ if ( is_user_logged_in() and is_user_member_of_blog()) {
 								'orderby' => 'meta_value',
 								) );
 		foreach ( $blogusers as $user ) {
-				if ( is_super_admin ($user->id)) continue;
+				if ( is_super_admin ($user->id) and get_bloginfo('title') != 'Blewbury Croquet Club') continue;
 				if ( ! wpmem_is_user_activated ($user->id)) continue;
 				$first_name = get_user_meta($user->id, 'first_name', true);
 				$last_name = get_user_meta($user->id, 'last_name', true);
