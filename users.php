@@ -31,8 +31,7 @@ if ( is_user_logged_in() and is_user_member_of_blog()) {
 				$phone_2 = get_user_meta($user->id, 'phone_2', true);
 				$phone = $phone_1;
 				if ($phone_2 != "") $phone = $phone . ' / ' . $phone_2;
-				$img = get_cupp_meta($user -> id, 'thumbnail');
-				$img = get_avatar_url($user -> id, ['default' => $img]);
+				$img = get_avatar_url($user -> id);
 				$hcap = "";
 				$ac = get_user_meta($user->id, 'ac_h', true);
 				$gc = get_user_meta($user->id, 'gc_h', true);
