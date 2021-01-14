@@ -14,11 +14,6 @@ function croquet_enqueue_styles() {
 add_action( 'wp_enqueue_scripts', 'croquet_enqueue_styles' );
 
 function mucd_primary_table_to_copy($primary_tables) {
-		$primary_tables[] = 'duplicator_packages';
-		$primary_tables[] = 'supsystic_tbl_columns';
-		$primary_tables[] = 'supsystic_tbl_diagrams';
-		$primary_tables[] = 'supsystic_tbl_rows';
-		$primary_tables[] = 'supsystic_tbl_tables';
 		$primary_tables[] = 'masterslider_sliders';
 		$primary_tables[] = 'masterslider_options';
 		return $primary_tables;
