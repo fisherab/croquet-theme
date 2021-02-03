@@ -12,35 +12,44 @@ get_header(); ?>
 
 <?php
 if ( is_user_logged_in() and is_user_member_of_blog()) {
-		$blogusers = get_users( array( 
-								'fields' => array( 'id', 'display_name','user_email' ) , 
-								'meta_key' => 'last_name',
-								'orderby' => 'meta_value',
-								) );
-		foreach ( $blogusers as $user ) {
-				if ( is_super_admin ($user->id) and get_bloginfo('title') != 'Blewbury Croquet Club') continue;
-				if ( ! wpmem_is_user_activated ($user->id)) continue;
-				$first_name = get_user_meta($user->id, 'first_name', true);
-				$last_name = get_user_meta($user->id, 'last_name', true);
-				$name = $last_name . ', ' . $first_name;
-				$address = get_user_meta($user->id, 'addr1', true);
-				$addr2 = get_user_meta($user->id, 'addr2', true);
-				if ($addr2 != "") $address = $address . ', ' .  $addr2;
-				$address = $address . ', '  . get_user_meta($user->id, 'town', true) . ', '  . get_user_meta($user->id, 'postcode', true);
-				$phone_1 = get_user_meta($user->id, 'phone_1', true);  
-				$phone_2 = get_user_meta($user->id, 'phone_2', true);
-				$phone = $phone_1;
-				if ($phone_2 != "") $phone = $phone . ' / ' . $phone_2;
-				$img = get_avatar_url($user -> id);
-				$hcap = "";
-				$ac = get_user_meta($user->id, 'ac_h', true);
-				$gc = get_user_meta($user->id, 'gc_h', true);
-				if ($ac or $gc) $hcap = "<br>";
-				if ($ac) $hcap = $hcap . "AC: ". $ac;
-				if ($ac and $gc) $hcap = $hcap . ", ";
-				if ($gc) $hcap = $hcap . "GC: ". $gc;
-				echo '<p><b><img src="' . $img . '" width="80" height="80" style="float:left; margin-right:20px;">' . esc_html($name ) . '</b> &lt' . esc_html( $user->user_email ) . '&gt<br/>' . $address  . '<br/>Tel: ' . $phone . $hcap . '</p>';
-		}
+    $blogusers = get_users( array( 
+        'fields' => array( 'id', 'display_name','user_email' ) , 
+        'meta_key' => 'last_name',
+        'orderby' => 'meta_value',
+    ) );
+    foreach ( $blogusers as $user ) {
+        if ( is_super_admin ($user->id) and get_bloginfo('title') != 'Blewbury Croquet Club') continue;
+        if ( ! wpmem_is_user_activated ($user->id)) continue;
+        $first_name = get_user_meta($user->id, 'first_name', true);
+        $last_name = get_user_meta($user->id, 'last_name', true);
+        $name = $last_name . ', ' . $first_name;
+        $address = get_user_meta($user->id, 'addr1', true);
+        $addr2 = get_user_meta($user->id, 'addr2', true);
+        if ($addr2 != "") $address = $address . ', ' .  $addr2;
+        $address = $address . ', '  . get_user_meta($user->id, 'town', true) . ', '  . get_user_meta($user->id, 'postcode', true);
+        $phone_1 = get_user_meta($user->id, 'phone_1', true);  
+        $phone_2 = get_user_meta($user->id, 'phone_2', true);
+        $phone = $phone_1;
+        if ($phone_2 != "") $phone = $phone . ' / ' . $phone_2;
+        $img = get_avatar_url($user -> id);
+        $hcap = "";
+        $ac = get_user_meta($user->id, 'ac_h', true);
+        $gc = get_user_meta($user->id, 'gc_h', true);
+        $sc = get_user_meta($user->id, 'sc_h', true);
+
+        if ($ac or $gc or $sc) $hcap = "<br>";
+        if ($ac) $hcap = $hcap . "AC: ". $ac;
+        if ($gc) {
+            if($hcap) $hcap = $hcap . ", ";
+            $hcap = $hcap . "GC: ". $gc;
+        }
+        if ($sc) {
+            if($hcap) $hcap = $hcap . ", ";
+            $hcap = $hcap . "SC: ". $sc;
+        }
+
+        echo '<p><b><img src="' . $img . '" width="80" height="80" style="float:left; margin-right:20px;">' . esc_html($name ) . '</b> &lt;' . esc_html( $user->user_email ) . '&gt;<br/>' . $address  . '<br/>Tel: ' . $phone . $hcap . '</p>';
+    }
 }
 ?>
 
