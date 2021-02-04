@@ -11,6 +11,9 @@ function croquet_enqueue_styles() {
     );
     wp_enqueue_style('font-awesome', 'https://use.fontawesome.com/releases/v5.0.6/css/all.css'); 
 }
+
+require 'croquet-options.php';
+
 add_action( 'wp_enqueue_scripts', 'croquet_enqueue_styles' );
 
 function mucd_primary_table_to_copy($primary_tables) {
@@ -28,14 +31,14 @@ add_filter( 'allow_subdirectory_install', 'croquet_subdirector_install');
 
 add_theme_support( 'sportspress' );
 
-function write_log($log) {
-    if (! defined('WP_DEBUG')) return; 
-    if (is_array($log) || is_object($log)){
-        error_log(print_r($log,true));
-    } else {
-        error_log($log);
-    }
-}
+// function write_log($log) {
+//    if (! defined('WP_DEBUG')) return; 
+//    if (is_array($log) || is_object($log)){
+//        error_log(print_r($log,true));
+//    } else {
+//        error_log($log);
+//    }
+//}
 
 add_filter('wpmem_pwd_change_error', 'croquet_reset_password',10,3);
 
@@ -97,11 +100,11 @@ function croquet_password_check($user,$pass,$min_length,$min_char_type) {
 
 function croquet_weak_password( $fields ) {
     global $wpmem_themsg;
-    write_log($fields);    
+    $options=get_option('croquet_options');
     if (array_key_exists('password', $fields)) { 
         $user=$fields['username'];
         $pass=$fields['password'];
-        if ($err = croquet_password_check($user, $pass, 6, 1)) {
+        if ($err = croquet_password_check($user, $pass, $options['min_length'], $options['min_of_each'])) {
             $wpmem_themsg = $err;
         }
     }
@@ -109,22 +112,19 @@ function croquet_weak_password( $fields ) {
 }
 
 function croquet_reset_password($is_error, $user_ID, $pass) {
-    write_log([$is_error, $user_ID, $pass]);
+    $options=get_option('croquet_options');
     if (! $is_error) {
         $user = get_user_by('ID', $user_ID)->user_login;
-        write_log($user);
-        if ($err = croquet_password_check($user, $pass, 6, 1)) {
+        if ($err = croquet_password_check($user, $pass, $options['min_length'], $options['min_of_each'])) {
             $is_error = 'pwdchangerr';
             global $croquet_pw_error;
             $croquet_pw_error = $err;
-            write_log($err);
         }
     }
     return $is_error;
 }
 
 function croquet_bad_pw_dialog($str, $tag) {
-    write_log([$str, $tag]);
     if ($tag === 'pwdchangerr') {
         global $croquet_pw_error;
         if (isset($croquet_pw_error)) {
@@ -136,10 +136,9 @@ function croquet_bad_pw_dialog($str, $tag) {
 }
 
 function croquet_validate_password_reset($errors, $user, $pass) {
-    write_log([$errors,$user->user_login, $pass]);
-    if ($err = croquet_password_check($user->user_login, $pass, 6, 1)) {
+    $options=get_option('croquet_options');
+    if ($err = croquet_password_check($user->user_login, $pass, $options['min_length'], $options['min_of_each'])) {
         $errors->add('password_reset_mismatch',$err);
-        write_log($err);
     }
 }
 ?>
