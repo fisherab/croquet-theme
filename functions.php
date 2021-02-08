@@ -31,14 +31,14 @@ add_filter( 'allow_subdirectory_install', 'croquet_subdirector_install');
 
 add_theme_support( 'sportspress' );
 
-// function write_log($log) {
-//    if (! defined('WP_DEBUG')) return; 
-//    if (is_array($log) || is_object($log)){
-//        error_log(print_r($log,true));
-//    } else {
-//        error_log($log);
-//    }
-//}
+#function croquet_write_log($log) {
+#    if (! defined('WP_DEBUG')) return; 
+#    if (is_array($log) || is_object($log)){
+#        error_log(print_r($log,true));
+#    } else {
+#        error_log($log);
+#    }
+#}
 
 add_filter('wpmem_pwd_change_error', 'croquet_reset_password',10,3);
 
@@ -98,9 +98,14 @@ function croquet_password_check($user,$pass,$min_length,$min_char_type) {
     return false;
 }
 
+function croquet_get_options() {
+    $options=get_option('croquet_options', ['min_length'=>6,'min_of_each'=>1]);
+    return $options;
+}
+
 function croquet_weak_password( $fields ) {
     global $wpmem_themsg;
-    $options=get_option('croquet_options');
+    $options=croquet_get_options();
     if (array_key_exists('password', $fields)) { 
         $user=$fields['username'];
         $pass=$fields['password'];
@@ -112,7 +117,7 @@ function croquet_weak_password( $fields ) {
 }
 
 function croquet_reset_password($is_error, $user_ID, $pass) {
-    $options=get_option('croquet_options');
+    $options=croquet_get_options();
     if (! $is_error) {
         $user = get_user_by('ID', $user_ID)->user_login;
         if ($err = croquet_password_check($user, $pass, $options['min_length'], $options['min_of_each'])) {
@@ -136,7 +141,7 @@ function croquet_bad_pw_dialog($str, $tag) {
 }
 
 function croquet_validate_password_reset($errors, $user, $pass) {
-    $options=get_option('croquet_options');
+    $options=croquet_get_options();
     if ($err = croquet_password_check($user->user_login, $pass, $options['min_length'], $options['min_of_each'])) {
         $errors->add('password_reset_mismatch',$err);
     }

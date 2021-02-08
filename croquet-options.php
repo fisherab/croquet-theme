@@ -19,7 +19,7 @@ Options for the Password Security of the Croquet Theme.
 
 add_action('admin_init', 'plugin_admin_init');
 function plugin_admin_init(){
-    register_setting( 'croquet_options', 'croquet_options', ['sanitize_callback' => 'croquet_options_validate', 'default'=>[]] );
+    register_setting( 'croquet_options', 'croquet_options', ['sanitize_callback' => 'croquet_options_validate', 'default'=>['min_length'=>6,'min_of_each'=>1]] );
     add_settings_section('croquet_main_section', 'Main Settings', 'croquet_main_section_text', 'croquet');
 
     add_settings_field('croquet_min_length', 'Minimum length of password', 'render_croquet_min_length', 'croquet', 'croquet_main_section');
