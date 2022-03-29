@@ -37,16 +37,17 @@ if ( is_user_logged_in() and is_user_member_of_blog()) {
         $gc = get_user_meta($user->id, 'gc_h', true);
         $sc = get_user_meta($user->id, 'sc_h', true);
 
-        if ($ac or $gc or $sc) $hcap = "<br>";
-        if ($ac) $hcap = $hcap . "AC: ". $ac;
-        if ($gc) {
+        $hcap = "";
+        if (strlen(trim($ac)) !== 0) $hcap = $hcap . "AC: ". $ac;
+        if (strlen(trim($gc)) !== 0) {
             if($hcap) $hcap = $hcap . ", ";
             $hcap = $hcap . "GC: ". $gc;
         }
-        if ($sc) {
+        if (strlen(trim($sc)) !== 0) {
             if($hcap) $hcap = $hcap . ", ";
             $hcap = $hcap . "SC: ". $sc;
         }
+        if ($hcap) $hcap = "<br>" . $hcap;
 
         echo '<p><b><img src="' . $img . '" width="80" height="80" style="float:left; margin-right:20px;">' . esc_html($name ) . '</b> &lt;' . esc_html( $user->user_email ) . '&gt;<br/>' . $address  . '<br/>Tel: ' . $phone . $hcap . '</p>';
     }
